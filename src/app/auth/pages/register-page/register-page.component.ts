@@ -15,8 +15,17 @@ export class RegisterPageComponent {
 
   myForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.pattern(this.formUtils.namePattern)]],
-    email: ['',[Validators.required, Validators.pattern(this.formUtils.emailPattern)]],
-    username: ['',[Validators.required, Validators.minLength(6), Validators.pattern(this.formUtils.notOnlySpacesPattern)]],
+    email: [
+      '',
+      [Validators.required, Validators.pattern(this.formUtils.emailPattern)],
+      [this.formUtils.checkingServer]
+    ],
+    username: ['',
+      [
+        Validators.required, Validators.minLength(6), this.formUtils.notStrider,
+        Validators.pattern(this.formUtils.notOnlySpacesPattern)
+      ]
+    ],
     password: ['',[Validators.required, Validators.minLength(6)]],
     password2: ['', [Validators.required]],
   },{
@@ -27,7 +36,7 @@ export class RegisterPageComponent {
 
   onSubmit():void {
     this.myForm.markAllAsTouched();
-    console.log(this.myForm.value);
+    //console.log(this.myForm.value);
   }
   
 

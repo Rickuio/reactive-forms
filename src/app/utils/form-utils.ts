@@ -1,5 +1,13 @@
 import { AbstractControl, FormArray, FormGroup, ValidationErrors } from "@angular/forms";
 
+async function sleep() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 2000);
+  });
+}
+
 export class FormUtils {
 
   static namePattern = '([a-zA-Z]+) ([a-zA-Z]+)';
@@ -18,6 +26,10 @@ export class FormUtils {
           return `Valor minimo de ${ errors['min'].min}`
         case 'email':
           return `El valor ingresado no es un correo valido.`
+        case 'emailTaken':
+          return `Correo electrónico ya está en uso.`
+        case 'userNotPermit':
+          return `El usuario no esta permitido.`
         case 'pattern':
           let patternText = '';
           if (errors['pattern'].requiredPattern == FormUtils.emailPattern) {
@@ -59,6 +71,29 @@ export class FormUtils {
       const val2 = formGroup.get(field2)?.value;
       return val1 === val2 ? null : { passwordsNotEqual: true};
     }
+  }
+
+  static async checkingServer(control: AbstractControl):Promise<ValidationErrors|null> {
+    console.log('Antes await: Validando servidor')
+    await sleep();
+    const formValue = control.value;
+    if (formValue === 'hola@mundo.com') {
+      return {
+        emailTaken: true,
+      }
+    }
+    return null;
+  }
+
+  static notStrider(control: AbstractControl): ValidationErrors|null {
+    const formValue = control.value;
+    // return formValue === 'strider' ? { noStrider: true } :  null;
+    if (formValue === 'strider') {
+      return {
+        userNotPermit: true,
+      }
+    }
+    return null;
   }
 
 }
